@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 # Configure the Gemini AI SDK with your API key
-genai.configure(api_key="AIzaSyAWcvPsBE2vYD3Cy4WDVpyVdheshbzQKn8")  # Replace with your actual Gemini API key
+genai.configure(api_key="your_api_key")  # Replace with your actual Gemini API key
 
 # Define the model configuration
 generation_config = {
