@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Question-Answer Bot</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Question-Answer Bot</h1>
+    <div>
+        <label for="topic">Choose a topic:</label>
+        <select id="topic">
+            <option value="Geography">Geography</option>
+            <option value="Health">Health</option>
+            <option value="Sports">Sports</option>
+        </select>
+        <button id="generateQuestion">Generate Question</button>
+    </div>
+    <div id="questionDisplay" style="margin-top: 20px;"></div>
+    <div id="answerSection" style="display: none; margin-top: 20px;">
+        <label for="answer">Your Answer:</label>
+        <input type="text" id="answer">
+        <button id="submitAnswer">Submit Answer</button>
+    </div>
+    <div id="evaluationDisplay" style="margin-top: 20px;"></div>
+
+    <script>
+        $(document).ready(function() {
+            $('#generateQuestion').click(function() {
+                var topic = $('#topic').val();
+                $.ajax({
+                    url: '/generate_question',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ topic: topic }),
+                    success: function(response) {
+                        if (response.question) {
+                            $('#questionDisplay').text('Question: ' + response.question);
+                            $('#answerSection').show();
+                        } else {
+                            $('#questionDisplay').text('Error: ' + response.error);
+                        }
+                    }
+                });
+            });
+
+            $('#submitAnswer').click(function() {
+                var question = $('#questionDisplay').text().replace('Question: ', '');
+                var answer = $('#answer').val();
+                $.ajax({
+                    url: '/validate_answer',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ question: question, answer: answer }),
+                    success: function(response) {
+                        if (response.evaluation) {
+                            $('#evaluationDisplay').text('Evaluation: ' + response.evaluation);
+                        } else {
+                            $('#evaluationDisplay').text('Error: ' + response.error);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
